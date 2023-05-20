@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
 	Button,
 	FormControl,
@@ -8,14 +9,15 @@ import {
 	VStack,
 	useToast,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
 import axios from "axios";
-const Signup = () => {
+
+const Login = () => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [show, setShow] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const toast = useToast();
+
 	const handleLogin = async () => {
 		setLoading(true);
 		const payload = { email, password };
@@ -25,19 +27,22 @@ const Signup = () => {
 
 			if (token) {
 				localStorage.setItem("token", token);
-				setLoading(false);
-				toast({
-					title: "Login Successful",
-					description: "Redirecting ....",
-					status: "success",
-					duration: 2000,
-					isClosable: true,
-				});
+				setTimeout(() => {
+					setLoading(false);
+					toast({
+						title: "Login Successful",
+						description: "Redirecting ....",
+						status: "success",
+						duration: 2000,
+						isClosable: true,
+					});
+				}, 2000)
+
 			} else {
 				setLoading(false);
 				toast({
 					title: "Login Failed",
-					description: "Wrong Crediential",
+					description: "Wrong Credential",
 					status: "error",
 					duration: 3000,
 					isClosable: true,
@@ -53,10 +58,14 @@ const Signup = () => {
 				isClosable: true,
 			});
 		}
-
 	};
+
+	const handleTogglePassword = () => {
+		setShowPassword(!showPassword);
+	};
+
 	return (
-		<VStack spacing={"5px"}>
+		<VStack spacing={5}>
 			<FormControl isRequired>
 				<FormLabel>Email</FormLabel>
 				<Input
@@ -64,7 +73,8 @@ const Signup = () => {
 					value={email}
 					type="email"
 					onChange={(e) => setEmail(e.target.value)}
-					placeholder="Please Enter Your Email ...."
+					placeholder="Please enter your email..."
+					borderRadius="md"
 				/>
 			</FormControl>
 			<FormControl isRequired>
@@ -73,23 +83,35 @@ const Signup = () => {
 					<Input
 						id="password"
 						value={password}
-						type={show ? "text" : "password"}
+						type={showPassword ? "text" : "password"}
 						onChange={(e) => setPassword(e.target.value)}
-						placeholder="Please Enter Your Password ...."
+						placeholder="Please enter your password..."
+						borderRadius="md"
 					/>
-					<InputRightElement size={"md"}>
-						<Button onClick={() => setShow(!show)} size={"md"} p={4} borderRadius={4}>
-							{show ? "Hide" : "Show"}
+					<InputRightElement width="4.5rem">
+						<Button
+							h="1.75rem"
+							size="sm"
+							onClick={handleTogglePassword}
+							borderRadius="md"
+							_hover={{ bgColor: "gray.400" }}
+							_active={{ bgColor: "gray.600" }}
+						>
+							{showPassword ? "Hide" : "Show"}
 						</Button>
 					</InputRightElement>
 				</InputGroup>
 			</FormControl>
 			<Button
-				width={"100%"}
-				colorScheme={"red"}
+				width="100%"
+				colorScheme="teal"
 				mt={10}
 				onClick={handleLogin}
 				isLoading={loading}
+				borderRadius="md"
+				_hover={{ bgColor: "teal.600" }}
+				_active={{ bgColor: "teal.700" }}
+				transition="background-color 0.3s ease"
 			>
 				Login
 			</Button>
@@ -97,4 +119,4 @@ const Signup = () => {
 	);
 };
 
-export default Signup;
+export default Login;
