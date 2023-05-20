@@ -1,10 +1,11 @@
 /* imported express */
 const express = require("express")
 const app = express()
-
+var cors = require('cors')
 require('dotenv').config()
 const { chats } = require("./data")
 
+app.use(cors())
 /* Home Page Route */
 app.get("/", (req, res) => {
 
