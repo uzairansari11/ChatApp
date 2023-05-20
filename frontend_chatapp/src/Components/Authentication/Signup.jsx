@@ -15,7 +15,7 @@ const Signup = () => {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [show, setShow] = useState(false);
+	const [showPassword, setShowPassword] = useState(false);
 	const [pic, setPic] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const toast = useToast();
@@ -111,6 +111,11 @@ const Signup = () => {
 			}
 		}
 	};
+
+	const handleTogglePassword = () => {
+		setShowPassword(!showPassword);
+	};
+
 	return (
 		<VStack spacing={"5px"}>
 			<FormControl isRequired>
@@ -140,13 +145,20 @@ const Signup = () => {
 					<Input
 						id="user_password"
 						value={password}
-						type={show ? "text" : "password"}
+						type={showPassword ? "text" : "password"}
 						onChange={(e) => setPassword(e.target.value)}
 						placeholder="Please Enter Your Password ...."
 					/>
-					<InputRightElement size={"md"}>
-						<Button onClick={() => setShow(!show)} size={"md"} p={4} borderRadius={4}>
-							{show ? "Hide" : "Show"}
+					<InputRightElement width="4.5rem">
+						<Button
+							h="1.75rem"
+							size="sm"
+							onClick={handleTogglePassword}
+							borderRadius="md"
+							_hover={{ bgColor: "gray.400" }}
+							_active={{ bgColor: "gray.600" }}
+						>
+							{showPassword ? "Hide" : "Show"}
 						</Button>
 					</InputRightElement>
 				</InputGroup>
@@ -156,17 +168,20 @@ const Signup = () => {
 				<Input
 					id="pic"
 					type="file"
-					border={"none"}
+					border="none"
 					accept="image/*"
 					onChange={(e) => postDetails(e.target.files)}
 				/>
 			</FormControl>
 			<Button
-				width={"100%"}
-				colorScheme={"red"}
+				width="100%"
+				colorScheme="teal"
 				mt={10}
 				isLoading={loading}
 				onClick={handleSubmit}
+				_hover={{ bgColor: "teal.600" }}
+				_active={{ bgColor: "teal.700" }}
+				transition="background-color 0.3s ease"
 			>
 				Sign Up
 			</Button>

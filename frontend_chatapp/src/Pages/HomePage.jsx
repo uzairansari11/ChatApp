@@ -10,11 +10,16 @@ export const HomePage = () => {
 				p={"2"}
 				width={"100%"}
 				justifyContent={"center"}
-				mt={4}
+				mt={2}
 				borderTopRadius={4}
 				boxShadow={"xl"}
+				bgGradient="linear(to-r, teal.400, teal.600)"
+				color="white"
+				opacity={0.9}
 			>
-				<Text fontSize={"2xl"}>My Chat App</Text>
+				<Text fontSize={"3xl"} fontFamily="monospace">
+					My Chat App
+				</Text>
 			</Box>
 
 			<Box
@@ -25,6 +30,8 @@ export const HomePage = () => {
 				mt={4}
 				borderBottomRadius={4}
 				boxShadow={"lg"}
+				bg="white"
+				opacity={0.9}
 			>
 				<AuthenticationTabs />
 			</Box>
