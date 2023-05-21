@@ -5,8 +5,8 @@ const { ChatPage } = require("../Pages/ChatPage");
 export const AllRoutes = () => {
 	return (
 		<Routes>
-			<Route path='/' element={<HomePage />} />
-			<Route path='/chats' element={<ChatPage />} />
+			<Route path="/" element={<HomePage />} />
+			<Route path="/chats" element={<ChatPage />} />
 		</Routes>
 	);
 };

@@ -1,29 +1,26 @@
 /* -------------Importing Part------------------ */
-import React, { useEffect, useState } from "react";
-import { Box, Text } from "@chakra-ui/react";
-import { chatDataFromAPI } from "../Utils/fetchingchat";
+import { Box } from "@chakra-ui/react";
+import SideDrawer from "../Components/miscellaneous/SideDrawer";
+import ChatBox from "../Components/miscellaneous/ChatBox";
+import MyChats from "../Components/miscellaneous/MyChats";
 
 /* -------------------------------------------- */
 export const ChatPage = () => {
+	const user = "true";
+	return (
+		<Box w={"100%"}>
+			{user && <SideDrawer />}
 
-    const url = "http://localhost:4500/api/chat"
-    const [chats, setChats] = useState([]);
-
-
-    /* ----------------------UseEffect & Logic---------------------- */
-    useEffect(() => {
-        window.scrollTo(0, 0);
-        chatDataFromAPI(url).then((res) => {
-            setChats(...chats, res);
-        })
-    }, []);
-    /* -------------------------------------------- */
-    return (
-        <Box>
-            {chats.length &&
-                chats.map((users) => {
-                    return <Text key={users._id}>{users.chatName}</Text>;
-                })}
-        </Box>
-    );
+			<Box
+				display={"flex"}
+				justifyContent={"space-between"}
+				w={"100%"}
+				h={"90vh"}
+				p={4}
+			>
+				{user && <MyChats />}
+				{user && <ChatBox />}
+			</Box>
+		</Box>
+	);
 };
