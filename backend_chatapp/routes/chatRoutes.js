@@ -1,20 +1,25 @@
-const express = require('express');
-const { accessChat, fetchChat, groupChatCreator } = require('../controller/chatController');
+const express = require("express");
+const {
+	accessChat,
+	fetchChat,
+	groupChatCreator,
+	renameGroup,
+	addToGroup,
+	removeFromGroup,
+} = require("../controller/chatController");
 
 const chatRoutes = express.Router();
 
-chatRoutes.post("/", accessChat)
+chatRoutes.post("/", accessChat);
 
-chatRoutes.get("/", fetchChat)
+chatRoutes.get("/", fetchChat);
 
-chatRoutes.post("/group", groupChatCreator)
+chatRoutes.post("/group", groupChatCreator);
 
-chatRoutes.put("/group/rename")
+chatRoutes.put("/group/rename", renameGroup);
 
-chatRoutes.put("/group/remove")
+chatRoutes.put("/group/add", addToGroup);
 
-chatRoutes.put("/group/add")
+chatRoutes.put("/group/remove", removeFromGroup);
 
-
-
-module.exports = { chatRoutes }
+module.exports = { chatRoutes };
