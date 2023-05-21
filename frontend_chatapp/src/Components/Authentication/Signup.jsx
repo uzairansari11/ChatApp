@@ -48,12 +48,10 @@ const Signup = () => {
 				.then((response) => response.json())
 				.then((data) => {
 					const picUrl = data.url.toString();
-					console.log(picUrl);
 					setPic(picUrl);
 					setLoading(false);
 				})
 				.catch((error) => {
-					console.log(error);
 					setLoading(false);
 				});
 		} else {

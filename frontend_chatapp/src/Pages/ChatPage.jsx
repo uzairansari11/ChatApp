@@ -3,10 +3,16 @@ import { Box } from "@chakra-ui/react";
 import SideDrawer from "../Components/miscellaneous/SideDrawer";
 import ChatBox from "../Components/miscellaneous/ChatBox";
 import MyChats from "../Components/miscellaneous/MyChats";
+import { useEffect } from "react";
+import { useChatState } from "../Components/Context/ChatContextProvider";
 
 /* -------------------------------------------- */
 export const ChatPage = () => {
-	const user = "true";
+	const { user, setUser } = useChatState();
+	useEffect(() => {
+		const userDetails = JSON.parse(localStorage.getItem("userDetails"));
+		setUser(userDetails);
+	}, []);
 	return (
 		<Box w={"100%"}>
 			{user && <SideDrawer />}
@@ -15,7 +21,7 @@ export const ChatPage = () => {
 				display={"flex"}
 				justifyContent={"space-between"}
 				w={"100%"}
-				h={"90vh"}
+				h={"85vh"}
 				p={4}
 			>
 				{user && <MyChats />}
