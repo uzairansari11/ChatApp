@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const { UserModel } = require("../models/userModel");
 const { generatetoken } = require("../config/generatetoken");
-
+const { authMiddleware } = require("../middleware/authMiddleware");
 /* ----------------User Registeration------------------ */
 const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password, pic } = req.body;
@@ -48,9 +48,10 @@ const loginUser = async (req, res) => {
         if (userExists) {
             bcrypt.compare(password, userExists.password).then(function (result) {
                 if (result) {
-                    res
-                        .status(200)
-                        .send({ message: "Login successful", token: generatetoken(userExists._id) });
+                    res.status(200).send({
+                        message: "Login successful",
+                        token: generatetoken(userExists._id),
+                    });
                 } else {
                     res.status(200).send({ message: "Login Failed" });
                 }
@@ -61,4 +62,19 @@ const loginUser = async (req, res) => {
     }
 };
 
-module.exports = { registerUser, loginUser };
+/* ----------------Search User------------------ */
+
+const serachUser = async (req, res,) => {
+    const serachedUser = req.query.search
+        ? {
+            $or: [
+                { name: { $regex: req.query.search, $options: "i" } },
+                { email: { $regex: req.query.search, $options: "i" } },
+            ],
+        }
+        : {};
+    const finalSearchedUser = await UserModel.find(serachedUser).find({ _id: { $ne: req.user._id } })
+    res.send(finalSearchedUser);
+};
+
+module.exports = { registerUser, loginUser, serachUser };
