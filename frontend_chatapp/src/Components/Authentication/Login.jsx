@@ -10,6 +10,7 @@ import {
 	useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
 	const [email, setEmail] = useState("");
@@ -17,16 +18,18 @@ const Login = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const toast = useToast();
+	const navigate = useNavigate();
 
 	const handleLogin = async () => {
 		setLoading(true);
 		const payload = { email, password };
 		try {
 			const res = await axios.post("http://localhost:4500/user/login", payload);
-			const token = res.data
-
+			const token = res.data.token;
+			const resData = res.data.data;
+			var data = { ...resData, token };
 			if (token) {
-				localStorage.setItem("userDetails", JSON.stringify(token));
+				localStorage.setItem("userDetails", JSON.stringify(data));
 				setTimeout(() => {
 					setLoading(false);
 					toast({
@@ -36,6 +39,7 @@ const Login = () => {
 						duration: 2000,
 						isClosable: true,
 					});
+					navigate("/chats", { replace: true });
 				}, 2000);
 			} else {
 				setLoading(false);
@@ -64,7 +68,7 @@ const Login = () => {
 	};
 
 	return (
-		<VStack spacing={5}>
+		<VStack spacing={4} align="center">
 			<FormControl isRequired>
 				<FormLabel>Email</FormLabel>
 				<Input
@@ -104,13 +108,12 @@ const Login = () => {
 			<Button
 				width="100%"
 				colorScheme="teal"
-				mt={10}
+				mt={6}
 				onClick={handleLogin}
 				isLoading={loading}
 				borderRadius="md"
 				_hover={{ bgColor: "teal.600" }}
 				_active={{ bgColor: "teal.700" }}
-				transition="background-color 0.3s ease"
 			>
 				Login
 			</Button>

@@ -1,37 +1,33 @@
-import { Avatar, Box, Text, background } from "@chakra-ui/react";
+import { Avatar, Box, Text } from "@chakra-ui/react";
 import React from "react";
 
 const UserList = ({ user, handleUser }) => {
 	return (
 		<Box
 			onClick={handleUser}
-			cursor={"pointer"}
-			w={"100%"}
-			display={"flex"}
-			alignItems={"center"}
-			justifyContent={"space-around"}
-			color={"black"}
-			px={3}
-			py={2}
+			cursor="pointer"
+			w="100%"
+			display="flex"
+			alignItems="center"
+			justifyContent="space-between"
+			color="black"
+			p={3}
 			mb={2}
-			borderRadius={"lg"}
-            boxShadow={"md"}
-            _hover={
-                {
-                    background: 'teal',
-                    color: 'white',
-                
-                }
-    
-            }
+			borderRadius="lg"
+			boxShadow="md"
+			_hover={{
+				bg: "teal",
+				color: "white",
+			}}
 		>
-			<Avatar mr={2} size={"sm"} cursor={"pointer"} src={user.pic} />
-			<Box w={"70%"} textAlign={"left"}>
-				<Text>{user.name}</Text>
-				<Text fontSize={"xs"}>
-					<b>Email : </b>
-					{user.email}
-				</Text>
+			<Box display="flex" alignItems="center">
+				<Avatar size="sm" mr={2} cursor="pointer" src={user.pic} />
+				<Box>
+					<Text fontSize="md" fontWeight="bold">
+						{user.name}
+					</Text>
+					<Text fontSize="sm">{user.email}</Text>
+				</Box>
 			</Box>
 		</Box>
 	);

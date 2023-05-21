@@ -7,7 +7,6 @@ export const HomePage = () => {
 		<Container maxW={"xl"} centerContent>
 			<Box
 				display={"flex"}
-				p={"2"}
 				width={"100%"}
 				justifyContent={"center"}
 				mt={2}
@@ -17,7 +16,7 @@ export const HomePage = () => {
 				color="white"
 				opacity={0.9}
 			>
-				<Text fontSize={"3xl"} fontFamily="monospace">
+				<Text fontSize={"3xl"} >
 					My Chat App
 				</Text>
 			</Box>
