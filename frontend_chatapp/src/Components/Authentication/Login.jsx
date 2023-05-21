@@ -23,10 +23,10 @@ const Login = () => {
 		const payload = { email, password };
 		try {
 			const res = await axios.post("http://localhost:4500/user/login", payload);
-			const token = res.data.token;
+			const token = res.data
 
 			if (token) {
-				localStorage.setItem("token", token);
+				localStorage.setItem("userDetails", JSON.stringify(token));
 				setTimeout(() => {
 					setLoading(false);
 					toast({
@@ -36,8 +36,7 @@ const Login = () => {
 						duration: 2000,
 						isClosable: true,
 					});
-				}, 2000)
-
+				}, 2000);
 			} else {
 				setLoading(false);
 				toast({
