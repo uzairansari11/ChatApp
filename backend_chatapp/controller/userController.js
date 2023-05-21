@@ -48,10 +48,8 @@ const loginUser = async (req, res) => {
         if (userExists) {
             bcrypt.compare(password, userExists.password).then(function (result) {
                 if (result) {
-                    res.status(200).send({
-                        message: "Login successful",
-                        token: generatetoken(userExists._id),
-                    });
+                    let token = generatetoken(userExists._id);
+                    res.status(200).send({ data: userExists, token });
                 } else {
                     res.status(200).send({ message: "Login Failed" });
                 }
@@ -64,7 +62,7 @@ const loginUser = async (req, res) => {
 
 /* ----------------Search User------------------ */
 
-const serachUser = async (req, res,) => {
+const serachUser = async (req, res) => {
     const serachedUser = req.query.search
         ? {
             $or: [
@@ -73,7 +71,9 @@ const serachUser = async (req, res,) => {
             ],
         }
         : {};
-    const finalSearchedUser = await UserModel.find(serachedUser).find({ _id: { $ne: req.user._id } })
+    const finalSearchedUser = await UserModel.find(serachedUser).find({
+        _id: { $ne: req.user._id },
+    });
     res.send(finalSearchedUser);
 };
 
