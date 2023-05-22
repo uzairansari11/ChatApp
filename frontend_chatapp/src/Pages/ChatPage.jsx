@@ -3,12 +3,14 @@ import { Box } from "@chakra-ui/react";
 import SideDrawer from "../Components/miscellaneous/SideDrawer";
 import ChatBox from "../Components/miscellaneous/ChatBox";
 import MyChats from "../Components/miscellaneous/MyChats";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useChatState } from "../Components/Context/ChatContextProvider";
 
 /* -------------------------------------------- */
 export const ChatPage = () => {
 	const { user, setUser } = useChatState();
+	const [fetchAgain, setFetchAgain] = useState(false);
+
 	useEffect(() => {
 		const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 		setUser(userDetails);
@@ -24,8 +26,10 @@ export const ChatPage = () => {
 				h={"85vh"}
 				p={4}
 			>
-				{user && <MyChats />}
-				{user && <ChatBox />}
+				{user && <MyChats fetchAgain={fetchAgain} />}
+				{user && (
+					<ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+				)}
 			</Box>
 		</Box>
 	);

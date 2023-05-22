@@ -29,7 +29,6 @@ const SideDrawer = () => {
 	const [search, setSearch] = useState("");
 	const [searchResult, setSearchResult] = useState([]);
 	const [loading, setLoading] = useState(false);
-	const [loadingChat, setLoadingChat] = useState();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const toast = useToast();
 	const navigate = useNavigate();
@@ -206,7 +205,7 @@ const SideDrawer = () => {
 							</Button>
 						</Box>
 						{loading ? (
-							<Chatloading />
+							<Chatloading number={10} />
 						) : (
 							searchResult?.map((user) => {
 								return (
