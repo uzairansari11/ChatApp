@@ -1,18 +1,13 @@
 import { Stack } from "@chakra-ui/react";
 import React from "react";
 import { Skeleton } from "@chakra-ui/react";
-const Chatloading = () => {
+const Chatloading = ({ number }) => {
+	let skeletonNumber = new Array(number).fill(0);
 	return (
 		<Stack>
-			<Skeleton height="40px" />
-			<Skeleton height="40px" />
-			<Skeleton height="40px" />
-			<Skeleton height="40px" />
-			<Skeleton height="40px" />
-			<Skeleton height="40px" />
-			<Skeleton height="40px" />
-			<Skeleton height="40px" />
-			<Skeleton height="40px" />
+			{skeletonNumber.map((ele, index) => {
+				return <Skeleton height="40px" key={index} />;
+			})}
 		</Stack>
 	);
 };
