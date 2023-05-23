@@ -8,28 +8,25 @@ const { connection } = require("./config/db");
 const { userRouter } = require("./routes/userRoutes");
 const { chatRoutes } = require("./routes/chatRoutes");
 const { authMiddleware } = require("./middleware/authMiddleware");
+const { messageRoutes } = require("./routes/messageRoutes");
 
 app.use(cors());
 // app.use(parse())
 
 app.use(express.json());
 
-
 /* Home Page Route */
 app.get("/", (req, res) => {
 	res.status(200).send("welcome to chatapp");
 });
 
-
 /* All Users  Route */
 app.use("/user", userRouter);
 
-
-
 /* All  Chat Route */
-app.use("/api/chat", authMiddleware, chatRoutes)
+app.use("/api/chat", authMiddleware, chatRoutes);
 
-
+app.use("/api/messages", authMiddleware, messageRoutes);
 /* making server to run */
 app.listen(process.env.PORT, async () => {
 	try {
