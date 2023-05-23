@@ -2,11 +2,12 @@ import React from "react";
 import { useChatState } from "./Context/ChatContextProvider";
 import { Box, IconButton, Text } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { getDetails, getPicture, getSender } from "./config/Chatlogic";
+import { getDetails, getSender } from "./config/Chatlogic";
 import UserModal from "./miscellaneous/UserModel";
+import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 
 const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
-    const { user, selectedChat, setSelectedChat, chat, setChat } = useChatState();
+    const { user, selectedChat, setSelectedChat } = useChatState();
 
     return (
         <>
@@ -27,30 +28,35 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
                             onClick={() => setSelectedChat("")}
                         />
                         {!selectedChat.isGroupChat ? (
-                            <>{getSender(user, selectedChat.users)}
+                            <>
+                                {getSender(user, selectedChat.users)}
 
                                 <UserModal user={getDetails(user, selectedChat.users)} />
-
                             </>
                         ) : (
-                            <>{selectedChat.chatName.toUpperCase()}</>
+                            <>
+                                {selectedChat.chatName.toUpperCase()}
+
+                                <UpdateGroupChatModal
+                                    fetchAgain={fetchAgain}
+                                    setFetchAgain={setFetchAgain}
+                                />
+                            </>
                         )}
                     </Text>
 
                     <Box
-                        display={'flex'}
-                        flexDir={'columns'}
-                        justifyContent={'flex-end'}
-                        p='3'
-                        bg={'grey'}
-                        w={'100%'}
-                        h='100%'
-                        borderRadius={'lg'}
-                        overflowY={'hidden'}
+                        display={"flex"}
+                        flexDir={"columns"}
+                        justifyContent={"flex-end"}
+                        p="3"
+                        bg={"teal"}
+                        w={"100%"}
+                        h="100%"
+                        borderRadius={"lg"}
+                        overflowY={"hidden"}
                     >
-                        Chatting ...
-                        messaging ...
-
+                        Chatting ... messaging ...
                     </Box>
                 </>
             ) : (
