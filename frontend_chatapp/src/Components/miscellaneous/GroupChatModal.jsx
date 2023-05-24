@@ -21,7 +21,6 @@ import Chatloading from "./Chatloading";
 import UserBadgeItem from "../UserList/UserBadgeItem";
 
 const GroupChatModal = ({ children }) => {
-	const { user, setUser, selectedChat, setSelectedChat, chat, setChat } = useChatState();
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const [groupChatName, setGroupChatName] = useState();
 	const [selectedUser, setSelectedUser] = useState([]);
@@ -30,44 +29,51 @@ const GroupChatModal = ({ children }) => {
 	const [loading, setLoading] = useState(false);
 	const toast = useToast();
 
-	const handleSearch = async (search) => {
-		setSearch(search);
-		if (!search) {
+	const { user, chat, setChat } = useChatState();
+
+	const handleSearch = async (query) => {
+		setSearch(query);
+
+		if (!query) {
 			return;
 		}
 
 		try {
 			setLoading(true);
+
 			const config = {
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${user.token}`,
 				},
 			};
+
 			const { data } = await axios.get(
 				`http://localhost:4500/user?search=${search}`,
 				config,
 			);
+
 			setLoading(false);
-			console.log(data);
+
 			setSearchResult(data);
 		} catch (error) {
 			toast({
-				title: "Error Occured",
-				description: "Failed to retrieve data",
+				title: "Opps!!!",
+				description: "Failed To Retrive Data",
 				status: "error",
-				duration: 2000,
+				duration: 3000,
 				isClosable: true,
 				position: "top-left",
 			});
 		}
 	};
+
 	const handleGroupUser = (userData) => {
 		if (selectedUser.includes(userData)) {
 			toast({
 				title: "User Already Added",
 				status: "warning",
-				duration: 2000,
+				duration: 3000,
 				isClosable: true,
 				position: "top",
 			});
@@ -77,14 +83,19 @@ const GroupChatModal = ({ children }) => {
 	};
 
 	const handleDelete = (userData) => {
-		setSelectedUser(selectedUser.filter((user) => user._id !== userData._id));
+		setSelectedUser(
+			selectedUser.filter(
+				(particularUser) => particularUser._id !== userData._id,
+			),
+		);
 	};
+
 	const handleSubmit = async () => {
 		if (!groupChatName || selectedUser.length === 0) {
 			toast({
 				title: "Please Fill All Fields",
 				status: "warning",
-				duration: 2000,
+				duration: 3000,
 				isClosable: true,
 				position: "top",
 			});
@@ -92,39 +103,48 @@ const GroupChatModal = ({ children }) => {
 		}
 		try {
 			setLoading(true);
+
 			const config = {
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${user.token}`,
 				},
 			};
+
 			const { data } = await axios.post(
 				`http://localhost:4500/api/chat/group`,
 				{
 					name: groupChatName,
-					users: JSON.stringify(selectedUser.map((u) => u._id))
+					users: JSON.stringify(selectedUser.map((u) => u._id)),
 				},
 				config,
 			);
+
 			setLoading(false);
-			console.log(data);
+
 			setChat([data, ...chat]);
-			onClose()
+
+			onClose();
+
 			toast({
-				title: "New Group Created",
+				title: `${groupChatName}   Created`,
 				status: "success",
-				duration: 2000,
+				duration: 3000,
 				isClosable: true,
 				position: "top",
 			});
 		} catch (error) {
 			toast({
-				title: "Failed to Create Group",
+				title: "Opps!!!",
+				description: "Failed To Create Group",
 				status: "error",
 				duration: 2000,
 				isClosable: true,
 				position: "top",
 			});
+		} finally {
+			setSelectedUser([])
+			setSearchResult([])
 		}
 	};
 
@@ -139,7 +159,7 @@ const GroupChatModal = ({ children }) => {
 						justifyContent={"center"}
 						fontSize={"20px"}
 					>
-						Create Group 
+						Create Group
 					</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody

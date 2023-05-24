@@ -112,20 +112,21 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
             {selectedChat ? (
                 <>
                     <Text
-                        fontSize={{ base: "20px", md: "25px" }}
+                        fontSize={{ base: "28px", md: "30px" }}
                         pb={3}
                         px={2}
                         w={"100%"}
                         display={"flex"}
                         justifyContent={"space-between"}
                         alignItems={"center"}
+                        fontFamily={'sans-serif'}
                     >
                         <IconButton
                             display={{ base: "flex", md: "none" }}
                             icon={<ArrowBackIcon />}
                             onClick={() => setSelectedChat("")}
                         />
-                        {!selectedChat.isGroupChat ? (
+                        {messages && !selectedChat.isGroupChat ? (
                             <>
                                 {getSender(user, selectedChat.users)}
 
@@ -156,7 +157,7 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
                     >
                         {loading ? (
                             <Spinner
-                                size={"lg"}
+                                size={"xl"}
                                 w={20}
                                 h={20}
                                 m={"auto"}
@@ -185,7 +186,7 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
                     justifyContent={"center"}
                     h="100%"
                 >
-                    <Text fontSize={"2xl"} fontWeight={"bold"}>
+                    <Text fontSize={"2xl"} color={'teal.500'} >
                         Select User For Chatting
                     </Text>
                 </Box>

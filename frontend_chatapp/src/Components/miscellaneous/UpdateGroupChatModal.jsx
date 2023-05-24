@@ -24,20 +24,26 @@ import axios from "axios";
 import Chatloading from "./Chatloading";
 import UserList from "../UserList/UserList";
 const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
+
 	const { isOpen, onOpen, onClose } = useDisclosure();
-	const { user, selectedChat, setSelectedChat } = useChatState();
 	const [groupChatName, setGroupChatName] = useState();
 	const [search, setSearch] = useState("");
 	const [searchResult, setSearchResult] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [renameloading, setRenameLoading] = useState(false);
 	const toast = useToast();
+
+	const { user, selectedChat, setSelectedChat } = useChatState();
+
 	const handleRemove = async (userData) => {
+
 		if (selectedChat.groupAdmin._id !== user._id && userData._id !== user._id) {
+
 			toast({
-				title: "Only admin can remove ",
+				title: `Sorry ! ${user.name}`,
+				description: "Only Admin Can Remove Someone",
 				status: "warning",
-				duration: 2000,
+				duration: 3000,
 				isClosable: true,
 				position: "top",
 			});
@@ -46,8 +52,10 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 
 		try {
 			setLoading(true);
+
 			const config = {
 				headers: {
+					"Content-Type": "application/json",
 					Authorization: `Bearer ${user.token}`,
 				},
 			};
@@ -66,46 +74,60 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 			setFetchAgain(!fetchAgain);
 			setLoading(false);
 		} catch (error) {
+
 			toast({
-				title: "Error Occured",
-				status: "warning",
+				title: "Opps!!",
+				description: "Something Went Wrong",
+				status: "error",
 				duration: 2000,
 				isClosable: true,
 				position: "top",
 			});
+
 		}
 		setLoading(false);
+		setGroupChatName("")
 	};
-	const handleGroupUser = async (userData) => {
+
+
+	const handleAddUser = async (userData) => {
 		if (selectedChat.users.find((u) => u._id === userData._id)) {
+
 			toast({
-				title: "User Already Added",
+				title: `Sorry`,
+				description: "User Already Added",
 				status: "warning",
-				duration: 2000,
+				duration: 3000,
 				isClosable: true,
 				position: "top",
 			});
+
 			return;
 		}
 
 		if (selectedChat.groupAdmin._id !== user._id) {
+
 			toast({
-				title: "Only Admin Can Add Someone",
+				title: `Sorry ! ${user.name}`,
+				description: "Only Admin Can Add Someone",
 				status: "warning",
-				duration: 2000,
+				duration: 3000,
 				isClosable: true,
 				position: "top",
 			});
+
 			return;
 		}
 		try {
 			setLoading(true);
+
 			const config = {
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${user.token}`,
 				},
 			};
+
 			const { data } = await axios.put(
 				`http://localhost:4500/api/chat/add`,
 				{
@@ -119,17 +141,21 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 			setLoading(false);
 		} catch (error) {
 			toast({
-				title: "Error Occured!",
-				status: "warning",
+				title: "Opps!!",
+				description: "Something Went Wrong",
+				status: "error",
 				duration: 1000,
 				isClosable: true,
 				position: "top",
 			});
-			console.log(error);
+
+			console.log(error, "adding people");
 		}
 
-		setRenameLoading(false);
+		setGroupChatName("")
 	};
+
+
 	const handleRename = async () => {
 		if (!groupChatName) return;
 
@@ -165,37 +191,49 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 		}
 		setGroupChatName("");
 	};
+
+
 	const handleSearch = async (query) => {
+
 		setSearch(query);
+
 		if (!query) {
 			return;
 		}
 
 		try {
 			setLoading(true);
+
 			const config = {
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: `Bearer ${user.token}`,
 				},
 			};
+
 			const { data } = await axios.get(
 				`http://localhost:4500/user?search=${search}`,
 				config,
 			);
+
+
 			setLoading(false);
+
 			setSearchResult(data);
+
 		} catch (error) {
 			toast({
-				title: "Error Occured",
-				description: "Failed to retrieve data",
+				title: "Opps!!!",
+				description: "Failed To Retrive Data",
 				status: "error",
 				duration: 2000,
 				isClosable: true,
 				position: "top-left",
 			});
 		}
+
 	};
+
 
 	return (
 		<>
@@ -253,12 +291,12 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }) => {
 								<Chatloading number={3} />
 							) : (
 								searchResult
-									?.map((user) => {
+									?.map((currentUser) => {
 										return (
 											<UserList
 												key={user._id}
 												user={user}
-												handleUser={() => handleGroupUser(user)}
+												handleUser={() => handleAddUser(currentUser)}
 											/>
 										);
 									})
