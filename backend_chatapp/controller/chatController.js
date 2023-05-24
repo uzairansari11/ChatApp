@@ -12,12 +12,8 @@ const accessChat = asyncHandler(async (req, res) => {
 	var isChat = await ChatModel.find({
 		isGroupChat: false,
 		$and: [
-			{
-				users: { $elemMatch: { $eq: req.user._id } },
-				users: {
-					$elemMatch: { $eq: userId },
-				},
-			},
+			{ users: { $elemMatch: { $eq: req.user._id } } },
+			{ users: { $elemMatch: { $eq: userId } } },
 		],
 	})
 		.populate("users", "-password")
@@ -41,7 +37,7 @@ const accessChat = asyncHandler(async (req, res) => {
 			const fullChat = await ChatModel.findOne({
 				_id: createdChat._id,
 			}).populate("users", "-password");
-			res.status(200).send(fullChat);
+			res.status(200).json(fullChat);
 		} catch (error) {
 			res.status(400);
 			throw new Error(error.message);
@@ -49,28 +45,27 @@ const accessChat = asyncHandler(async (req, res) => {
 	}
 });
 
-const fetchChat = async (req, res) => {
+const fetchChat = asyncHandler(async (req, res) => {
 	try {
-		const allChat = await ChatModel.find({
-			users: { $elemMatch: { $eq: req.user._id } },
-		})
+		await ChatModel.find({ users: { $elemMatch: { $eq: req.user._id } } })
 			.populate("users", "-password")
 			.populate("groupAdmin", "-password")
 			.populate("latestMessage")
 			.sort({ updateAt: -1 })
 			.then(async (result) => {
 				result = await UserModel.populate(result, {
-					path: "latestMessage",
+					path: "latestMessage.sender",
 					select: "name pic email",
 				});
 				res.status(200).send(result);
 			});
 	} catch (error) {
-		res.status(400).send(error);
+		res.status(400);
+		throw new Error(error.message);
 	}
-};
+});
 
-const groupChatCreator = async (req, res) => {
+const groupChatCreator = asyncHandler(async (req, res) => {
 	if (!req.body.users || !req.body.name) {
 		return res.status(400).send({ message: "Please fill all required fields" });
 	}
@@ -97,11 +92,12 @@ const groupChatCreator = async (req, res) => {
 
 		return res.status(200).json(fullGroupChat);
 	} catch (error) {
-		return res.status(400).send({ message: error.message });
+		res.status(400);
+		throw new Error(error.message);
 	}
-};
+});
 
-const renameGroup = async (req, res) => {
+const renameGroup = asyncHandler(async (req, res) => {
 	const { chatId, chatName } = req.body;
 
 	const updatedChat = await ChatModel.findByIdAndUpdate(
@@ -117,13 +113,15 @@ const renameGroup = async (req, res) => {
 		.populate("groupAdmin", "-password");
 
 	if (!updatedChat) {
-		res.status(400).send({ message: "Chat Not Found" });
+		res.status(404);
+		throw new Error("Chat Not Found"); 
 	} else {
 		res.status(200).json(updatedChat);
 	}
-};
+})
 
-const addToGroup = async (req, res) => {
+
+const addToGroup = asyncHandler(async (req, res) => {
 	const { chatId, userId } = req.body;
 
 	const addInGroup = await ChatModel.findByIdAndUpdate(
@@ -139,12 +137,15 @@ const addToGroup = async (req, res) => {
 		.populate("groupAdmin", "-password");
 
 	if (!addInGroup) {
-		res.status(400).send({ message: "Chat Not Found" });
+		res.status(404);
+		throw new Error("Chat Not Found"); 
 	} else {
 		res.status(200).json(addInGroup);
 	}
-};
-const removeFromGroup = async (req, res) => {
+})
+
+
+const removeFromGroup = asyncHandler(async (req, res) => {
 	const { chatId, userId } = req.body;
 
 	const remove = await ChatModel.findByIdAndUpdate(
@@ -160,11 +161,12 @@ const removeFromGroup = async (req, res) => {
 		.populate("groupAdmin", "-password");
 
 	if (!remove) {
-		res.status(400).send({ message: "Chat Not Found" });
+		res.status(404);
+		throw new Error("Chat Not Found"); 
 	} else {
 		res.status(200).json(remove);
 	}
-};
+});
 module.exports = {
 	accessChat,
 	fetchChat,

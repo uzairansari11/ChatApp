@@ -17,20 +17,20 @@ const registerUser = asyncHandler(async (req, res) => {
     if (userExists) {
         res.status(400);
         throw new Error("User already exists");
+
     }
 
     if (name && email && password) {
         const hashedPassword = bcrypt.hashSync(password, 4);
-        const newUser = await UserModel({ ...req.body, password: hashedPassword });
+        const newUser = await new UserModel({ ...req.body, password: hashedPassword });
         await newUser.save();
         res.status(200).send({
             message: "User Created successfully",
             data: newUser,
         });
     } else {
-        res.status(400).send({
-            message: "Something went wrong",
-        });
+        res.status(400)
+        throw new Error("Something went wrong");
     }
 });
 

@@ -9,9 +9,7 @@ export const ChatContextProvider = ({ children }) => {
 	useEffect(() => {
 		const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 		setUser(userDetails);
-		if (!userDetails) {
-			return Navigate("/")
-		}
+		
 	}, []);
 
 	return (

@@ -16,10 +16,10 @@ chatRoutes.get("/", fetchChat);
 
 chatRoutes.post("/group", groupChatCreator);
 
-chatRoutes.put("/group/rename", renameGroup);
+chatRoutes.put("/rename", renameGroup);
 
-chatRoutes.put("/group/add", addToGroup);
+chatRoutes.put("/add", addToGroup);
 
-chatRoutes.put("/group/remove", removeFromGroup);
+chatRoutes.put("remove", removeFromGroup);
 
 module.exports = { chatRoutes };
