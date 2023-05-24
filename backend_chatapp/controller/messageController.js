@@ -2,10 +2,9 @@ const { model } = require("mongoose");
 const { MessageModel } = require("../models/messageMOdel");
 const { UserModel } = require("../models/userModel");
 const { ChatModel } = require("../models/chatsModel");
-const expressAsyncHandler = require("express-async-handler");
+const asyncHandler = require("express-async-handler");
 
-const sendMessage = expressAsyncHandler(async (req, res) => {
-    // chat id actual message who is the sender
+const sendMessage = asyncHandler(async (req, res) => {
 
     const { content, chatId } = req.body;
     if (!content || !chatId) {
@@ -18,7 +17,7 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
     };
 
     try {
-        var message = await new MessageModel(newMessage);
+        var message = await  MessageModel.create(newMessage);
         message = await message.populate("sender", "name pic");
         message = await message.populate("chat");
         message = await UserModel.populate(message, {
@@ -36,16 +35,9 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
     }
 });
 
-const allMessage = expressAsyncHandler(async (req, res) => {
-    /*   */
-
+const allMessage = asyncHandler(async (req, res) => {
     try {
-        const messages = await MessageModel.find({ chat: req.params.chatId }).populate(
-
-            "sender",
-            "name pic email"
-        ).populate("chat")
-
+        const messages = await MessageModel.find({ chat: req.params.chatId }).populate( "sender",  "name pic email"  ).populate("chat")
         res.json(messages)
     } catch (error) {
         res.status(400);

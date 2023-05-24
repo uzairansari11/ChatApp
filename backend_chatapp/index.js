@@ -28,7 +28,7 @@ app.use("/api/chat", authMiddleware, chatRoutes);
 
 app.use("/api/messages", authMiddleware, messageRoutes);
 /* making server to run */
-app.listen(process.env.PORT, async () => {
+const server = app.listen(process.env.PORT, async () => {
 	try {
 		await connection();
 	} catch (error) {
@@ -36,3 +36,37 @@ app.listen(process.env.PORT, async () => {
 	}
 	console.log("server is running");
 });
+
+const io = require("socket.io")(server, {
+	pingTimeOut: 6000,
+	cors: {
+		origin: "http://localhost:3000"
+
+	}
+})
+
+io.on("connection", (socket) => {
+	console.log("connection established socket.io")
+	socket.on("setup", (userData) => {
+		socket.join(userData._id)
+		console.log(userData._id)
+		socket.emit("connected")
+	})
+	socket.on("join chat", (room) => {
+		socket.join(room);
+		console.log("userJoined Room", room)
+	})
+
+
+	socket.on("new messagae", (newMessageRecived) => {
+		var chat = newMessageRecived.chat
+		if (!chat.user) return console.log("chat.user is not defined")
+
+		chat.users.forEach((user) => {
+			if (user._id == newMessageRecived.sender._id) return;
+			socket.in(user._id).emit("message recived", newMessageRecived)
+		})
+	})
+
+})
+

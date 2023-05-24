@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useChatState } from "./Context/ChatContextProvider";
+import { useChatState } from "../Context/ChatContextProvider";
 import {
     Box,
     FormControl,
@@ -10,17 +10,20 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import { ArrowBackIcon } from "@chakra-ui/icons";
-import { getDetails, getSender } from "./config/Chatlogic";
-import UserModal from "./miscellaneous/UserModel";
-import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
+import { getDetails, getSender } from "../config/Chatlogic";
+import UserModal from "./UserModel";
+import UpdateGroupChatModal from "./UpdateGroupChatModal";
 import axios from "axios";
-import ScrollableChat from "./miscellaneous/ScrollableChat";
-
+import ScrollableChat from "./ScrollableChat";
+import io from "socket.io-client"
+const ENDPOINT = "http://localhost:4500"
+var socket, selectedChatCompare
 const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
     const { user, selectedChat, setSelectedChat } = useChatState();
     const [messages, setMessage] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [loading, setLoading] = useState(false);
+    const [socketConnected, setSocketConnected] = useState(false)
     const toast = useToast();
     const fetchMessage = async () => {
         if (!selectedChat) return
@@ -34,6 +37,7 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
             const { data } = await axios.get(`http://localhost:4500/api/messages/${selectedChat._id}`, config)
             setMessage(data)
             setLoading(false)
+            socket.emit("join chat", selectedChat._id)
         } catch (error) {
             toast({
                 title: "Error Occured",
@@ -63,6 +67,7 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
                     },
                     config,
                 );
+                socket.emit('new messagae', data);
                 setMessage([...messages, data]);
             } catch (error) {
                 toast({
@@ -81,7 +86,26 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
 
     useEffect(() => {
         fetchMessage()
+        selectedChatCompare = selectedChat
     }, [selectedChat])
+
+    useEffect(() => {
+        socket = io(ENDPOINT)
+        socket.emit("setup", user)
+        socket.on("connection", () => setSocketConnected(true))
+    }, [])
+
+    useEffect(() => {
+        socket.on('message recived', (newMessageRecived) => {
+            if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecived.chat._id) {
+                // give notification
+
+
+            } else {
+                setMessage([...messages, newMessageRecived])
+            }
+        })
+    })
     console.log("message", messages)
     return (
         <>

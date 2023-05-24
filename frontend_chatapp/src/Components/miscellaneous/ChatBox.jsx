@@ -2,23 +2,11 @@ import React from "react";
 import { useChatState } from "../Context/ChatContextProvider";
 import {
   Box,
-  Button,
-  FormControl,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  useDisclosure,
-  useToast,
+
 } from "@chakra-ui/react";
-import SingleChatComponent from "../SingleChatComponent";
+import SingleChatComponent from "./SingleChatComponent";
 const ChatBox = ({ fetchAgain, setFetchAgain }) => {
-  const { user, setUser, selectedChat, setSelectedChat, chat, setChat } =
-    useChatState();
+  const {  selectedChat } = useChatState();
   return (
     <Box
       display={{ base: selectedChat ? "flex" : "none", md: "flex" }}
