@@ -10,6 +10,21 @@ export const getDetails = (loggedUser, users) => {
 	return users[0]._id === loggedUser._id ? users[1].pic : users[0];
 };
 
+export const isLastMessage = (messages, currentIndex, userId) => {
+	return (
+		currentIndex === messages.length - 1 &&
+		messages[messages.length - 1].sender._id !== userId &&
+		messages[messages.length - 1].sender._id
+	);
+};
+
+export const isSameUser = (messages, currentMessage, currentIndex) => {
+	return (
+		currentIndex > 0 &&
+		messages[currentIndex - 1].sender._id === currentMessage.sender._id
+	);
+};
+
 export const isSameSender = (
 	messages,
 	currentMessage,
@@ -24,14 +39,6 @@ export const isSameSender = (
 	);
 };
 
-export const isLastMessage = (messages, currentIndex, userId) => {
-	return (
-		currentIndex === messages.length - 1 &&
-		messages[messages.length - 1].sender._id !== userId &&
-		messages[messages.length - 1].sender._id
-	);
-};
-
 export const isSameSenderMargin = (
 	messages,
 	currentMessage,
@@ -43,7 +50,7 @@ export const isSameSenderMargin = (
 		messages[currentIndex + 1].sender._id === currentMessage.sender._id &&
 		messages[currentIndex].sender._id !== userId
 	) {
-		return 33;
+		return 44;
 	} else if (
 		(currentIndex < messages.length - 1 &&
 			messages[currentIndex + 1].sender._id !== currentMessage.sender._id &&
@@ -55,11 +62,4 @@ export const isSameSenderMargin = (
 	} else {
 		return "auto";
 	}
-};
-
-export const isSameUser = (messages, currentMessage, currentIndex) => {
-	return (
-		currentIndex > 0 &&
-		messages[currentIndex - 1].sender._id === currentMessage.sender._id
-	);
 };

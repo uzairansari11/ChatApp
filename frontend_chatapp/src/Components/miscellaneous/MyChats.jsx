@@ -18,11 +18,15 @@ import GroupChatModal from "./GroupChatModal";
 
 const MyChats = ({ fetchAgain }) => {
 	const { user, selectedChat, setSelectedChat, chat, setChat } = useChatState();
+
 	const [loggedUser, setLoggedUser] = useState();
-	const [loading, setLoading] = useState(true);
+
+	const [loading, setLoading] = useState(false);
+
 	const toast = useToast();
 
 	const fetchChats = async () => {
+		setLoading(true);
 		try {
 			const config = {
 				headers: {
@@ -36,16 +40,18 @@ const MyChats = ({ fetchAgain }) => {
 			);
 
 			setChat(data);
+
 			setLoading(false);
 		} catch (error) {
 			toast({
-				title: "Error Occurred",
-				description: "Failed to retrieve data",
+				title: "opps!!!",
+				description: "Failed To Retrieve Data",
 				status: "error",
-				duration: 2000,
+				duration: 4000,
 				isClosable: true,
 				position: "top-left",
 			});
+
 			setLoading(false);
 		}
 	};
@@ -69,7 +75,7 @@ const MyChats = ({ fetchAgain }) => {
 		>
 			<Flex
 				alignItems="center"
-				px={4}
+				px={3}
 				bg="teal"
 				w="100%"
 				borderRadius="lg"
@@ -78,14 +84,17 @@ const MyChats = ({ fetchAgain }) => {
 				color="white"
 				py={3}
 			>
-				<Heading as="h2" size={{ base: "sm", md: "xs" }}>
-					My Chats
+
+				<Heading as="h3" size={{ base: "sm", md: "xs" }}>
+					Chats
 				</Heading>
+
 				<GroupChatModal>
 					<Button
 						rightIcon={<AddIcon />}
 						display="flex"
-						size={{ base: "sm", md: "xs" }}
+						size={{ base: "md", md: "sm" }}
+						fontWeight={"bolder"}
 						_hover={{ bg: "teal", color: "white" }}
 						bg="transparent"
 					>

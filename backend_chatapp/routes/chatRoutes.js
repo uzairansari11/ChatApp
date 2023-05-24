@@ -20,6 +20,6 @@ chatRoutes.put("/rename", renameGroup);
 
 chatRoutes.put("/add", addToGroup);
 
-chatRoutes.put("remove", removeFromGroup);
+chatRoutes.put("/remove", removeFromGroup);
 
 module.exports = { chatRoutes };
