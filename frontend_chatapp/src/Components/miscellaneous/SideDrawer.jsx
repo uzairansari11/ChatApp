@@ -16,6 +16,7 @@ import {
 	Input,
 	DrawerHeader,
 	useToast,
+	MenuItem,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { Search2Icon, BellIcon, ChevronDownIcon } from "@chakra-ui/icons";
@@ -25,6 +26,11 @@ import Chatloading from "./Chatloading";
 import UserList from "../UserList/UserList";
 import { useChatState } from "../Context/ChatContextProvider";
 import { useNavigate } from "react-router-dom";
+import { getSender } from "../config/Chatlogic";
+
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
+
 const SideDrawer = () => {
 	const [search, setSearch] = useState("");
 	const [searchResult, setSearchResult] = useState([]);
@@ -33,7 +39,14 @@ const SideDrawer = () => {
 	const toast = useToast();
 	const navigate = useNavigate();
 
-	const { user, setSelectedChat, chat, setChat } = useChatState();
+	const {
+		user,
+		setSelectedChat,
+		chat,
+		setChat,
+		notifications,
+		setNotifications,
+	} = useChatState();
 
 	const handleSearch = async () => {
 		if (!search) {
@@ -104,13 +117,12 @@ const SideDrawer = () => {
 	};
 	useEffect(() => { }, [user]);
 	const handleLogout = () => {
-
 		toast({
 			title: "Logout Initiated",
 			status: "warning",
 			duration: 1000,
 			isClosable: true,
-			position: 'top'
+			position: "top",
 		});
 
 		setTimeout(() => {
@@ -120,11 +132,13 @@ const SideDrawer = () => {
 				status: "success",
 				duration: 2000,
 				isClosable: true,
-				position: 'top'
+				position: "top",
 			});
 			navigate("/", { replace: true });
 		}, 2000);
 	};
+
+	console.log("notification from side drawer", notifications)
 	return (
 		<>
 			<Box
@@ -149,11 +163,31 @@ const SideDrawer = () => {
 				<div>
 					<Menu>
 						<MenuButton p={4}>
-							<BellIcon fontSize={"2xl"} color={"red"} />
+							<NotificationBadge
+								count={notifications.length}
+								effect={Effect.SCALE}
+							/>
+							<BellIcon fontSize={"2xl"} color={`${notifications.length>0?'red':'black'}`} />
 						</MenuButton>
-						{/* <MenuList>
-
-                    </MenuList> */}
+						<MenuList p={3} textAlign={'center'}>
+							{!notifications.length && "No New Messages"}
+							{notifications.map((ele) => {
+								return (
+									<MenuItem
+										key={ele._id}
+										onClick={() => {
+											setSelectedChat(ele.chat);
+											setNotifications(notifications.filter((n) => !ele));
+										}}
+									>
+										{ele.chat.isGroupChat
+											? `${ele.chat.chatname}`
+											: `
+										New Message From ${getSender(user, ele.chat.users)}`}
+									</MenuItem>
+								);
+							})}
+						</MenuList>
 					</Menu>
 
 					<Menu p={2}>
