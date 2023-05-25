@@ -1,0 +1,12 @@
+.messages {
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+.typing-indicator {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}

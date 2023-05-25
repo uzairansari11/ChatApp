@@ -12,6 +12,7 @@ import {
 	Button,
 	Image,
 	Text,
+	Divider,
 } from "@chakra-ui/react";
 import { ViewIcon } from "@chakra-ui/icons";
 const UserModal = ({ user, children }) => {
@@ -26,7 +27,7 @@ const UserModal = ({ user, children }) => {
 
 			<Modal isOpen={isOpen} onClose={onClose} isCentered>
 				<ModalOverlay />
-				<ModalContent height={"300px"} background={"whiteAlpha.500"}>
+				<ModalContent height={"300px"}>
 					<ModalHeader
 						fontSize={32}
 						d="flex"
@@ -49,15 +50,12 @@ const UserModal = ({ user, children }) => {
 							boxSize={"100px"}
 							borderRadius={"full"}
 							m={"auto"}
+							objectFit={'cover'}
 						/>
-						<Text>{user.email}</Text>
+						<Text mt={4} as='h3' fontWeight={'semibold'}>{user.email}</Text>
 					</ModalBody>
-
-					<ModalFooter>
-						<Button colorScheme="blue" mr={3} onClick={onClose}>
-							Close
-						</Button>
-					</ModalFooter>
+					<Divider />
+					
 				</ModalContent>
 			</Modal>
 		</>
