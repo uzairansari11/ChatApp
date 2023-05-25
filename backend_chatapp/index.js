@@ -40,33 +40,34 @@ const server = app.listen(process.env.PORT, async () => {
 const io = require("socket.io")(server, {
 	pingTimeOut: 6000,
 	cors: {
-		origin: "http://localhost:3000"
-
-	}
-})
+		origin: "http://localhost:3000",
+	},
+});
 
 io.on("connection", (socket) => {
-	console.log("connection established socket.io")
+	console.log("connection established socket.io");
+
 	socket.on("setup", (userData) => {
-		socket.join(userData._id)
-		console.log(userData._id)
-		socket.emit("connected")
-	})
+		socket.join(userData._id);
+		console.log(userData._id);
+		socket.emit("connected");
+	});
+
 	socket.on("join chat", (room) => {
 		socket.join(room);
-		console.log("userJoined Room", room)
-	})
+		console.log("userJoined Room", room);
+	});
 
+	socket.on("typing", (room) => socket.in(room).emit("typing"));
+	socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
 	socket.on("new messagae", (newMessageRecived) => {
-		var chat = newMessageRecived.chat
-		if (!chat.user) return console.log("chat.user is not defined")
+		var chat = newMessageRecived.chat;
+		if (!chat.users) return console.log("chat.user is not defined");
 
 		chat.users.forEach((user) => {
 			if (user._id == newMessageRecived.sender._id) return;
-			socket.in(user._id).emit("message recived", newMessageRecived)
-		})
-	})
-
-})
-
+			socket.in(user._id).emit("message recived", newMessageRecived);
+		});
+	});
+});
