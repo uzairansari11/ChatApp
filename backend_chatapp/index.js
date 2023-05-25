@@ -70,4 +70,10 @@ io.on("connection", (socket) => {
 			socket.in(user._id).emit("message recived", newMessageRecived);
 		});
 	});
+
+
+	socket.off('setup', () => {
+		console.log("User Disconnected")
+		socket.leave(userData._id)
+	})
 });
