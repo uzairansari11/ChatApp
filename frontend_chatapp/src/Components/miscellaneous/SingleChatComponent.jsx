@@ -25,7 +25,8 @@ const ENDPOINT = "http://localhost:4500";
 var socket, selectedChatCompare;
 
 const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
-    const { user, selectedChat, setSelectedChat } = useChatState();
+    const { user, selectedChat, setSelectedChat, notifications,
+        setNotifications, } = useChatState();
     const [messages, setMessage] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [loading, setLoading] = useState(false);
@@ -122,7 +123,10 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
                 !selectedChatCompare ||
                 selectedChatCompare._id !== newMessageRecived.chat._id
             ) {
-                // give notification
+                if (!notifications.includes(newMessageRecived)) {
+                    setNotifications([newMessageRecived, ...notifications])
+                    // setFetchAgain(!fetchAgain)
+                }
             } else {
                 setMessage([...messages, newMessageRecived]);
             }
@@ -216,7 +220,7 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
                         ) : (
                             <div className="messages">
                                 <ScrollableChat messages={messages} />
-                                    <div ref={messagesEndRef} />
+                                <div ref={messagesEndRef} />
                             </div>
 
                         )}
