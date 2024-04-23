@@ -8,8 +8,7 @@ import {
   SlideFade,
 } from "@chakra-ui/react";
 import Login from "./Login";
-import SignUp from "./SignUp";
-
+import SignUp from "./SignUp"
 const AuthenticationTabs = () => {
   const [tabIndex, setTabIndex] = useState(0);
   const tabNames = ["Login", "Sign Up"];
