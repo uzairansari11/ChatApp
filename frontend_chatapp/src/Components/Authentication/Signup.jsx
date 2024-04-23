@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import { signUpSchema } from "../../validation/validate";
-const SignUp = ({ onRegistrationComplete }) => {
+export const SignUpComponent = ({ onRegistrationComplete }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -178,5 +178,3 @@ const SignUp = ({ onRegistrationComplete }) => {
     </VStack>
   );
 };
-
-export default SignUp;
