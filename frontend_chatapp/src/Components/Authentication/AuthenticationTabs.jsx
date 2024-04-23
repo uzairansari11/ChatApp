@@ -1,64 +1,62 @@
-import React, { useEffect, useState } from "react";
-import { Tabs, TabList, TabPanels, Tab, TabPanel, SlideFade } from "@chakra-ui/react";
+import React, { useState } from "react";
+import {
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+  SlideFade,
+} from "@chakra-ui/react";
 import Login from "./Login";
-import Signup from "./Signup";
+import SignUp from "./SignUp";
 
 const AuthenticationTabs = () => {
-	const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(0);
+  const tabNames = ["Login", "Sign Up"];
+  const handleRegistrationComplete = () => {
+    setTabIndex(0);
+  };
+  const tabComponents = [
+    <Login />,
+    <SignUp onRegistrationComplete={handleRegistrationComplete} />,
+  ];
 
-	const handleTabChange = (index) => {
-		setTabIndex(index);
-	};
+  const handleTabChange = (index) => {
+    setTabIndex(index);
+  };
 
-	const handleRegistrationComplete = () => {
-		setTabIndex(0); // Switch to login tab after successful registration
-	};
-	useEffect(() => {
-
-	}, [tabIndex])
-	return (
-		<Tabs
-			variant="soft-rounded"
-			w={"100%"}
-			colorScheme="teal"
-			index={tabIndex}
-			onChange={handleTabChange}
-			isLazy
-		>
-			<TabList mb={"1rem"} borderRadius="md" p={2}>
-				<Tab
-					width={"50%"}
-					_selected={{
-						color: "white",
-						bg: "teal.600",
-					}}
-				>
-					Login
-				</Tab>
-				<Tab
-					width={"50%"}
-					_selected={{
-						color: "white",
-						bg: "teal.600",
-					}}
-				>
-					Sign Up
-				</Tab>
-			</TabList>
-			<TabPanels>
-				<TabPanel>
-					<SlideFade in={tabIndex === 0}>
-						<Login />
-					</SlideFade>
-				</TabPanel>
-				<TabPanel>
-					<SlideFade in={tabIndex === 1}>
-						<Signup onRegistrationComplete={handleRegistrationComplete} />
-					</SlideFade>
-				</TabPanel>
-			</TabPanels>
-		</Tabs>
-	);
+  return (
+    <Tabs
+      variant="soft-rounded"
+      w={"100%"}
+      colorScheme="teal"
+      index={tabIndex}
+      onChange={handleTabChange}
+      isLazy
+    >
+      <TabList mb={"1rem"} borderRadius="md" p={2}>
+        {tabNames.map((name, index) => (
+          <Tab
+            key={index}
+            width={"50%"}
+            _selected={{
+              color: "white",
+              bg: "teal.600",
+            }}
+          >
+            {name}
+          </Tab>
+        ))}
+      </TabList>
+      <TabPanels>
+        {tabComponents.map((component, index) => (
+          <TabPanel key={index}>
+            <SlideFade in={tabIndex === index}>{component}</SlideFade>
+          </TabPanel>
+        ))}
+      </TabPanels>
+    </Tabs>
+  );
 };
 
 export default AuthenticationTabs;

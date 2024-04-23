@@ -19,9 +19,9 @@ const accessChat = asyncHandler(async (req, res) => {
 		.populate("users", "-password")
 		.populate("latestMessage");
 	isChat = await UserModel.populate(isChat, {
-		path: "lastestMessage.sender",
-		select: "name pic email",
-	});
+    path: "latestMessage.sender",
+    select: "name pic email",
+  });
 
 	if (isChat.length > 0) {
 		res.send(isChat[0]);

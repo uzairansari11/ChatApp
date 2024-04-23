@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import { signUpSchema } from "../../validation/validate";
-const SignUp = () => {
+const SignUp = ({ onRegistrationComplete }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -85,6 +85,7 @@ const SignUp = () => {
       setLoading(false);
       if (res.data) {
         toast.success("User Has been registered");
+        onRegistrationComplete();
       }
     } catch (error) {
       setLoading(false);
@@ -133,7 +134,7 @@ const SignUp = () => {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Please Enter Your Password ...."
             maxLength={16}
-            minLength={8} // Corrected minLength
+            minLength={8}
           />
           <InputRightElement width="4.5rem">
             <Button
