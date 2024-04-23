@@ -4,12 +4,10 @@ import {
 	ModalOverlay,
 	ModalContent,
 	ModalHeader,
-	ModalFooter,
 	ModalBody,
 	ModalCloseButton,
 	useDisclosure,
 	IconButton,
-	Button,
 	Image,
 	Text,
 	Divider,
@@ -34,7 +32,7 @@ const UserModal = ({ user, children }) => {
 						justifyContent={"center"}
 						m={"auto"}
 					>
-						{user.name}
+						{user?.name}
 					</ModalHeader>
 					<ModalCloseButton />
 					<ModalBody
@@ -45,17 +43,16 @@ const UserModal = ({ user, children }) => {
 						m={"auto"}
 					>
 						<Image
-							src={user.pic}
-							alt={user.name}
+							src={user?.pic}
+							alt={user?.name}
 							boxSize={"100px"}
 							borderRadius={"full"}
 							m={"auto"}
 							objectFit={'cover'}
 						/>
-						<Text mt={4} as='h3' fontWeight={'semibold'}>{user.email}</Text>
+						<Text mt={4} as='h3' fontWeight={'semibold'}>{user?.email}</Text>
 					</ModalBody>
 					<Divider />
-					
 				</ModalContent>
 			</Modal>
 		</>

@@ -14,7 +14,7 @@ export const ChatPage = () => {
 	useEffect(() => {
 		const userDetails = JSON.parse(localStorage.getItem("userDetails"));
 		setUser(userDetails);
-	}, []);
+	}, [setUser]);
 	return (
 		<Box w={"100%"}>
 			{user && <SideDrawer />}

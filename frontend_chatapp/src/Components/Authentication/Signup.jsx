@@ -1,190 +1,178 @@
 import React, { useState } from "react";
 import {
-	Button,
-	FormControl,
-	FormLabel,
-	Input,
-	InputGroup,
-	InputRightElement,
-	VStack,
-	useToast,
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { signUpSchema } from "../../validation/validate";
+const SignUp = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [pic, setPic] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-const Signup = () => {
-	const [name, setName] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [showPassword, setShowPassword] = useState(false);
-	const [pic, setPic] = useState(null);
-	const [loading, setLoading] = useState(false);
-	const toast = useToast();
+  const postDetails = (files) => {
+    setPic(null);
+    setLoading(true);
+    if (files === undefined || files.length === 0) {
+      toast("Please Select an Image");
+      setLoading(false);
+      return;
+    }
 
-	const postDetails = (files) => {
-		setLoading(true);
-		if (files === undefined || files.length === 0) {
-			toast({
-				title: "Please Select an Image",
-				status: "warning",
-				duration: 2000,
-				isClosable: true,
-				position: "bottom",
-			});
-			setLoading(false);
-			return;
-		}
+    const file = files[0];
+    if (file.type === "image/jpeg" || file.type === "image/png") {
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "chatapp");
+      data.append("cloud_name", "uzair11");
 
-		const file = files[0];
-		if (file.type === "image/jpeg" || file.type === "image/png") {
-			const data = new FormData();
-			data.append("file", file);
-			data.append("upload_preset", "chatapp");
-			data.append("cloud_name", "dwsahjt72");
+      fetch("https://api.cloudinary.com/v1_1/uzair11/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const picUrl = data.url.toString();
+          setPic(picUrl);
+          setLoading(false);
+          toast.success("Image Uploaded");
+        })
+        .catch((error) => {
+          toast.error(error.message);
+          setLoading(false);
+          document.getElementById("pic").value = null;
+        });
+    } else {
+      toast("Please Select a JPEG or PNG Image");
+      setLoading(false);
+    }
+  };
 
-			fetch("https://api.cloudinary.com/v1_1/dwsahjt72/image/upload", {
-				method: "post",
-				body: data,
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					const picUrl = data.url.toString();
-					setPic(picUrl);
-					setLoading(false);
-				})
-				.catch((error) => {
-					setLoading(false);
-				});
-		} else {
-			toast({
-				title: "Please Select a JPEG or PNG Image",
-				status: "warning",
-				duration: 2000,
-				isClosable: true,
-				position: "bottom",
-			});
-			setLoading(false);
-		}
-	};
+  const handleSubmit = async () => {
+    setLoading(true);
 
-	const handleSubmit = async () => {
-		setLoading(true);
+    try {
+      const validationResult = signUpSchema.safeParse({
+        name,
+        email,
+        password,
+        pic,
+      });
 
-		if (!name || !email || !password || !pic) {
-			toast({
-				title: "Please Provide all required fields",
-				status: "warning",
-				duration: 2000,
-				isClosable: true,
-				position: "bottom",
-			});
-			setLoading(false);
-			return;
-		} else {
-			try {
-				const res = await axios.post("http://localhost:4500/user/register", {
-					name,
-					email,
-					password,
-					pic,
-				});
-				setLoading(false);
-				if (res.data) {
-					toast({
-						title: "User Has been registered",
-						status: "success",
-						duration: 2000,
-						isClosable: true,
-						position: "bottom",
-					});
-				}
-			} catch (error) {
-				setLoading(false);
-				toast({
-					title: error.message,
-					status: "error",
-					duration: 2000,
-					isClosable: true,
-					position: "bottom",
-				});
-			}
-		}
-	};
+      if (!validationResult.success) {
+        console.log(validationResult.error);
+        toast.error(validationResult.error.issues[0].message);
+        setLoading(false);
+        setLoading(false);
+        return;
+      }
 
-	const handleTogglePassword = () => {
-		setShowPassword(!showPassword);
-	};
+      const res = await axios.post("http://localhost:4500/user/register", {
+        name,
+        email,
+        password,
+        pic,
+      });
+      setLoading(false);
+      if (res.data) {
+        toast.success("User Has been registered");
+      }
+    } catch (error) {
+      setLoading(false);
+      toast.error(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-	return (
-		<VStack spacing={"5px"}>
-			<FormControl isRequired>
-				<FormLabel>Name</FormLabel>
-				<Input
-					id="name"
-					value={name}
-					type="text"
-					onChange={(e) => setName(e.target.value)}
-					placeholder="Please Enter Your Name ...."
-				/>
-			</FormControl>
-			<FormControl isRequired>
-				<FormLabel>Email</FormLabel>
-				<Input
-					id="user_email"
-					value={email}
-					type="email"
-					onChange={(e) => setEmail(e.target.value)}
-					placeholder="Please Enter Your Email ...."
-				/>
-			</FormControl>
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword);
+  };
 
-			<FormControl isRequired>
-				<FormLabel>Password</FormLabel>
-				<InputGroup>
-					<Input
-						id="user_password"
-						value={password}
-						type={showPassword ? "text" : "password"}
-						onChange={(e) => setPassword(e.target.value)}
-						placeholder="Please Enter Your Password ...."
-					/>
-					<InputRightElement width="4.5rem">
-						<Button
-							h="1.75rem"
-							size="sm"
-							onClick={handleTogglePassword}
-							borderRadius="md"
-							_hover={{ bgColor: "gray.400" }}
-							_active={{ bgColor: "gray.600" }}
-						>
-							{showPassword ? "Hide" : "Show"}
-						</Button>
-					</InputRightElement>
-				</InputGroup>
-			</FormControl>
-			<FormControl isRequired>
-				<FormLabel>Upload Your Picture</FormLabel>
-				<Input
-					id="pic"
-					type="file"
-					border="none"
-					accept="image/*"
-					onChange={(e) => postDetails(e.target.files)}
-				/>
-			</FormControl>
-			<Button
-				width="100%"
-				colorScheme="teal"
-				mt={10}
-				isLoading={loading}
-				onClick={handleSubmit}
-				_hover={{ bgColor: "teal.600" }}
-				_active={{ bgColor: "teal.700" }}
-				transition="background-color 0.3s ease"
-			>
-				Sign Up
-			</Button>
-		</VStack>
-	);
+  return (
+    <VStack spacing={"5px"}>
+      <FormControl isRequired>
+        <FormLabel>Name</FormLabel>
+        <Input
+          id="name"
+          value={name}
+          type="text"
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Please Enter Your Name ...."
+          maxLength={30}
+        />
+      </FormControl>
+      <FormControl isRequired>
+        <FormLabel>Email</FormLabel>
+        <Input
+          id="user_email"
+          value={email}
+          type="email"
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Please Enter Your Email ...."
+          maxLength={30}
+        />
+      </FormControl>
+
+      <FormControl isRequired>
+        <FormLabel>Password</FormLabel>
+        <InputGroup>
+          <Input
+            id="user_password"
+            value={password}
+            type={showPassword ? "text" : "password"}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Please Enter Your Password ...."
+            maxLength={16}
+            minLength={8} // Corrected minLength
+          />
+          <InputRightElement width="4.5rem">
+            <Button
+              h="1.75rem"
+              size="sm"
+              onClick={handleTogglePassword}
+              borderRadius="md"
+              _hover={{ bgColor: "gray.400" }}
+              _active={{ bgColor: "gray.600" }}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </Button>
+          </InputRightElement>
+        </InputGroup>
+      </FormControl>
+      <FormControl isRequired>
+        <FormLabel>Upload Your Picture</FormLabel>
+        <Input
+          id="pic"
+          type="file"
+          border="none"
+          accept="image/*"
+          onChange={(e) => postDetails(e.target.files)}
+        />
+      </FormControl>
+      <Button
+        width="100%"
+        colorScheme="teal"
+        mt={10}
+        isLoading={loading}
+        onClick={handleSubmit}
+        _hover={{ bgColor: "teal.600" }}
+        _active={{ bgColor: "teal.700" }}
+        transition="background-color 0.3s ease"
+      >
+        Sign Up
+      </Button>
+    </VStack>
+  );
 };
 
-export default Signup;
+export default SignUp;

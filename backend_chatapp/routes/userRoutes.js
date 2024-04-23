@@ -1,5 +1,5 @@
 const express = require('express');
-const { registerUser, loginUser, serachUser } = require('../controller/userController');
+const { registerUser, loginUser, searchUser } = require('../controller/userController');
 const { authMiddleware } = require('../middleware/authMiddleware');
 
 const userRouter = express.Router()
@@ -9,7 +9,7 @@ userRouter.post("/login", loginUser)
 
 userRouter.post('/register', registerUser)
 
-userRouter.get("/", authMiddleware, serachUser)
+userRouter.get("/", authMiddleware, searchUser);
 
 
 

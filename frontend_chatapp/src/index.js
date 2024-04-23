@@ -5,13 +5,16 @@ import App from "./App";
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter } from "react-router-dom";
 import { ChatContextProvider } from "./Components/Context/ChatContextProvider";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-	<ChatContextProvider>
-		<ChakraProvider>
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
-		</ChakraProvider>
-	</ChatContextProvider>,
+  <BrowserRouter>
+    <ChatContextProvider>
+      <ChakraProvider>
+        <App />
+      </ChakraProvider>
+    </ChatContextProvider>
+    <ToastContainer />
+  </BrowserRouter>
 );

@@ -183,7 +183,7 @@ const SideDrawer = () => {
 										{ele.chat.isGroupChat
 											? `${ele.chat.chatname}`
 											: `
-										New Message From ${getSender(user, ele.chat.users)}`}
+										New Message From ${getSender(user, ele?.chat?.users)}`}
 									</MenuItem>
 								);
 							})}
@@ -199,7 +199,7 @@ const SideDrawer = () => {
 							<Avatar
 								size={"sm"}
 								cursor={"pointer"}
-								name={user.name}
+								name={user?.name}
 								src={user.pic}
 							/>
 						</MenuButton>
