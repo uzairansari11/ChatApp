@@ -34,7 +34,10 @@ const Login = () => {
         toast.warning(failedValidation);
         return;
       }
-      const res = await axios.post("http://localhost:4500/user/login", payload);
+      const res = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/user/login`,
+        payload
+      );
       const token = res.data.token;
       const resData = res.data.data;
       var data = { ...resData, token };

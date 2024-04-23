@@ -76,12 +76,15 @@ const SignUp = ({ onRegistrationComplete }) => {
         return;
       }
 
-      const res = await axios.post("http://localhost:4500/user/register", {
-        name,
-        email,
-        password,
-        pic,
-      });
+      const res = await axios.post(
+        `${process.env.REACT_APP_BASE_URL}/user/register`,
+        {
+          name,
+          email,
+          password,
+          pic,
+        }
+      );
       setLoading(false);
       if (res.data) {
         toast.success("User Has been registered");

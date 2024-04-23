@@ -20,7 +20,6 @@ import "./style.css";
 import io from "socket.io-client";
 import Lottie from "react-lottie";
 import animationData from "../animation/typing.json";
-const ENDPOINT = "http://localhost:4500";
 
 var socket, selectedChatCompare;
 
@@ -58,7 +57,7 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
         },
       };
       const { data } = await axios.get(
-        `http://localhost:4500/api/messages/${selectedChat._id}`,
+        `${process.env.REACT_APP_BASE_URL}/api/messages/${selectedChat._id}`,
         config
       );
       setMessage(data);
@@ -87,7 +86,7 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
         };
         setNewMessage("");
         const { data } = await axios.post(
-          "http://localhost:4500/api/messages",
+          `${process.env.REACT_APP_BASE_URL}/api/messages`,
           {
             content: newMessage,
             chatId: selectedChat._id,
@@ -114,7 +113,7 @@ const SingleChatComponent = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(`${process.env.REACT_APP_BASE_URL}`);
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
